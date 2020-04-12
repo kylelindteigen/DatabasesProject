@@ -1,6 +1,3 @@
-#Assignment 
-Database project
-
 ## Skills
 * Develop a complete JavaScript application according to specifications
 * Use an external API in JavaScript

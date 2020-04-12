@@ -1,3 +1,9 @@
+# Getting started
+
+* npm i 
+* npm start
+
+
 ## Skills
 * Develop a complete JavaScript application according to specifications
 * Use an external API in JavaScript

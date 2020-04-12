@@ -1,0 +1,15 @@
+[
+	{
+		"restaurantName": "Q39 - Midtown",
+		"description": "Hip, airy joint with beamed ceilings",
+		"address": "1000 W 39th St, Kansas City, MO 64111",
+		"lat": 39.0574,
+		"long":  94.5981,
+		"reviews": [
+			{
+				"rating": 4,
+				"text": "Best BBQ in the city hands down! Every bite slaps!!"
+			}
+		]
+	}
+]

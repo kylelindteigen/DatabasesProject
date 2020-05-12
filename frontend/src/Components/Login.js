@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from "react-redux";
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -9,6 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouteLink } from 'react-router-dom';
+import useLogin from './useLogin';
+import { useHistory } from 'react-router-dom';
+import { loginUser } from './actions';
+import { useHomePage } from './useHomePage'
+import HomePage from './HomePage'
 
 
 const useStyles = makeStyles(theme => ({
@@ -31,14 +37,59 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignIn() {
+export default function Login() {
   const classes = useStyles();
+  const history = useHistory();
+
+  const dispatch = useDispatch();
+  const [failed, setFailed] = React.useState(false);
+  const { onLogin, onPageLoad } = useHomePage();
+  const handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setFailed(false);
+	};
+
+	useEffect(() => {
+		// if (localStorage.token) {
+		// 	history.push((onPageLoad(localStorage.token)));
+		// }
+	});
+  const loginSubmit = () => {
+	  let x = JSON.stringify({ "user": {
+		"email" : "email",
+		"password" : "password"
+	}})
+  		fetch('http://localhost:8000/api/login', {
+  			method: 'POST',
+  			headers: {
+  				'Content-Type': 'application/json',
+  			},
+  			body: JSON.stringify(inputs),
+			credentials: "same-origin"
+  		})
+  			.then(response => response.json())
+  			.then((data) => {
+  				if (data.status == "success") {
+					localStorage.setItem("token", data.token);
+					localStorage.setItem("userid", data.userid);
+					dispatch(loginUser(data));
+					history.push((onLogin(data.token)));
+  				} else {
+					setFailed(true);
+  				}
+  			})
+  			.catch(error => { setFailed(true); console.log("fetch error", error)});
+  }
+  const { inputs, handleInputChange, handleSubmit } = useLogin(loginSubmit);
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -46,8 +97,10 @@ export default function SignIn() {
             fullWidth
             id="email"
             label="Email Address"
+			onChange={handleInputChange}
             name="email"
             autoComplete="email"
+			value={inputs.email || ''}
             autoFocus
           />
           <TextField
@@ -59,15 +112,15 @@ export default function SignIn() {
             label="Password"
             type="password"
             id="password"
+			onChange={handleInputChange}
             autoComplete="current-password"
+			value={inputs.password || ''}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
           <Button
-			component={RouteLink} 
-			to="/Speeches"
             type="submit"
             fullWidth
             variant="contained"
@@ -88,8 +141,8 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid>
-              <Link component={RouteLink} to="/SignUpResturant" variant="body2">
-                {"Resturant sign up"}
+              <Link component={RouteLink} to="/SignUpRestaurant" variant="body2" lineHeight="5">
+                {"Restaurant sign up"}
                 </Link>
             </Grid>
           </Grid>

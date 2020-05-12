@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUpRestaurant() {
 	const classes = useStyles();
     const history = useHistory();
 
@@ -43,7 +43,7 @@ export default function SignUp() {
     const { onLogin, onPageLoad } = useHomePage();
     const signupSubmit = () => {
 		localStorage.clear();
-    		fetch('http://localhost:8000/api/signUp', {
+    		fetch('http://localhost:8000/api/signUpRest', {
     			method: 'POST',
     			headers: {
     				'Content-Type': 'application/json',
@@ -56,9 +56,11 @@ export default function SignUp() {
 						dispatch(loginUser(data));
 						localStorage.setItem("token", data.token);
 						localStorage.setItem("userid", data.insertId);
+
 	  					history.push((onLogin(data)));
+    					console.log(data)
     				} else {
-	  					console.log("fail")
+	  					console.log("failed")
     				}
     			})
     			.catch(error => { setFailed(true); console.log("fetch error", error)});
@@ -131,6 +133,30 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+				onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="style"
+                label="Style"
+                type="style"
+                id="style"
+				onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="address"
+                label="Address"
+                type="address"
+                id="address"
 				onChange={handleInputChange}
               />
             </Grid>

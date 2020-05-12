@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import RestaurantsList from "./Components/RestaurantsList";
+import HomePage from "./Components/HomePage";
+import UserPage from "./Components/UserPage";
+import Login from "./Components/Login";
+import SignUp from "./Components/SignUp";
+import SignUpRestaurant from "./Components/SignUpRestaurant";
+import RestaurantList from "./Components/RestaurantsList";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Map from "./Components/Map";
 import "./App.css";
 
@@ -87,31 +94,22 @@ class App extends Component {
 	};
 
 	render() {
-		debugger;
 		return (
+			<Router>
 			<div className="main-content-container container-fluid d-flex flex-column">
 				<div className="row">
-					<RestaurantsList
-						restaurants={this.state.restaurants}
-						restaurant={this.state.restaurant}
-						restaurantsListView={this.state.restaurantsListView}
-						closeRestaurantTargetView={this.closeRestaurantTargetView}
-						handleClick={this.handleClick}
-						handleSubmitForm={this.handleSubmitForm}
-						handleSubmitFormComment={this.handleSubmitFormComment}
-						newRestaurantPosition={this.state.newRestaurantPosition}
-						ratingsState={this.ratingsState}
-					/>
-					<Map
-						restaurants={this.state.restaurants}
-						handleClick={this.handleClick}
-						getLatLng={this.getLatLng}
-						apiLoadedCallback={this.apiLoadedCallback}
-						minRating={this.state.minRating}
-						maxRating={this.state.maxRating}
-					/>
+					<CssBaseline/>
+					<Route exact path='/' component={Login}/>
+					<Route exact path='/SignUp' component={SignUp}/>
+					<Route exact path='/SignUpRestaurant' component={SignUpRestaurant}/>
+					<Route exact path='/HomePage' component={HomePage}/>
+					<Route exact path='/UserPage/:UserID' component={UserPage}/>
+					<Route exact path='/RestaurantPage/:UserID' component={HomePage}/>
+					<Route exact path='/Post/:UserID' component={HomePage}/>
+					<Route exact path='/Search/:SearchTerm' component={HomePage}/>
 				</div>
 			</div>
+			</Router>
 		);
 	}
 }

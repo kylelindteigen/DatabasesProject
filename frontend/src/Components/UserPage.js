@@ -78,22 +78,22 @@ export default function UserPage(props) {
 	// const createData = (id, name, username, email, address, error_count) => {
 	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
 	// }
-	fetch('http://localhost:8000/api/isRestaurant', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({userid: props.match.params.UserID}),
-	})
-		.then(response => response.json())
-		.then((data) => {
-			if (data.Restaurant) {
-				return()
-			} else {
-
-			}
-		})
-		.catch(error => { setReload(true); console.log("fetch error", error)});
+	// fetch('http://localhost:8000/api/isRestaurant', {
+	// 	method: 'POST',
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 	},
+	// 	body: JSON.stringify({userid: props.match.params.UserID}),
+	// })
+	// 	.then(response => response.json())
+	// 	.then((data) => {
+	// 		if (data.Restaurant) {
+	// 			return()
+	// 		} else {
+	//
+	// 		}
+	// 	})
+	// 	.catch(error => { setReload(true); console.log("fetch error", error)});
 	const minRating = 1;
 	const maxRating = 5;
 	var search = [];

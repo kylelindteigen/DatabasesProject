@@ -210,12 +210,14 @@ Router.post('/isRest', function(req, res){
 	const json_data = req.body
 	var userid = json_data.userid
 	sql.isRestaurant(userid).then(s =>{
-		if (s == []){
-			res.send(JSON.stringify({Restaurant: "false"}))
+		if(s.length < 1){
+			res.send(JSON.stringify({Restaurant: false}))
 		}
 		else{
-			res.send(JSON.stringify({Restaurant: "true"}))
+			res.send(JSON.stringify({Restaurant: true}))
 		}
+
+
 	}).catch(() =>
 		res.send(JSON.stringify({Restaurant: false}))
 	)

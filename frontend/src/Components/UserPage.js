@@ -91,7 +91,7 @@ export default function UserPage(props) {
 	})
 		.then(response => response.json())
 		.then((data) => {
-			console.log(data.Restaurant == "true")
+			console.log(data.Restaurant)
 			if (data.Restaurant) {
 				history.push(`/RestaurantPage/${props.match.params.UserID}`)
 			} else {

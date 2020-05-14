@@ -300,7 +300,7 @@ class SQL{
 
 		})
 	}
-	
+
 	static searchStyleRestaurant(style){
 		return db.query("SELECT DISTINCT * FROM (SELECT User.UserID, Name, Username, Email, Style, Address FROM Restaurant, User WHERE Restaurant.UserID = User.UserID) AS R WHERE Style = \"" + style + "\"", function (err, result, fields) {
 			if(err) throw err;

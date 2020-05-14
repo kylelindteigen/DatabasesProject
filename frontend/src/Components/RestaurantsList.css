@@ -3,7 +3,7 @@
 }
 
 .card {
-	background-color: var(--restaurantBackColor);
+	background-color: "black";
 }
 
 .restaurants-list-container {
@@ -50,7 +50,7 @@
 	display: none;
 }
 
-@media only screen and (max-width: 991px) {
+@media only screen and (max-width: 1000px) {
 	.restaurants-list-container {
 		height: 50vh;
 	}

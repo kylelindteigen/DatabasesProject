@@ -1,5 +1,4 @@
 import React, { Component, useState, useEffect } from "react";
-import Restaurant from "./Restaurant.js";
 import StarRatingComponent from "react-star-rating-component";
 import { makeStyles } from '@material-ui/core/styles';
 import TargetedRestaurant from "./TargetedRestaurant.js";
@@ -12,6 +11,8 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
+
+import NavBar from './NavBar';
 import "./RestaurantsList.css";
 
 const useStyles = makeStyles(theme => ({
@@ -78,7 +79,7 @@ export default function HomePage() {
 	// const createData = (id, name, username, email, address, error_count) => {
 	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
 	// }
-	
+
 	const minRating = 1;
 	const maxRating = 5;
 	var search = [];
@@ -101,6 +102,11 @@ export default function HomePage() {
 
 	const [reload, setReload] = useState(false);
 
+	// const searchNames = (searchTerm) => {
+	// 	let searchedSpeeches = speechCards.filter(speech => (speech.name.toLowerCase().includes(searchTerm.toLowerCase())));
+	// 	return setSpeechCards(searchedSpeeches);
+	// }
+	//
 	const searchName = (searchTerm) => {
 		fetch('http://localhost:8000/api/search', {
 			method: 'POST',
@@ -158,23 +164,15 @@ export default function HomePage() {
 	}, [reload])
 
 	return(
-		<div className="restaurants-list-container col-12 col-lg-4 p-2 order-2 order-lg-1">
+		<div >
+			<NavBar/>
 			<div>
-				<div className="card text-white bg-primary mb-3">
+				<div className="card">
 					<div className="card-header">
 						<div className="hero-container">
 							<div className="d-flex flex-column align-items-center justify-content-center">
-								<h1 className="logo d-flex justify-content-center">iEat</h1>
-								<a
-									href=""
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									<small>
-										<i value = {posts[0]}></i>
-									</small>
+								<textarea className="logo d-flex justify-content-center" value={localStorage.getItem("name")}></textarea>
 									{/* <i className="fas fa-utensils"></i> */}
-								</a>
 							</div>
 
 
@@ -225,7 +223,7 @@ export default function HomePage() {
 							   >
 								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/User/${follows.UserID}`,
+										pathname: `/UserPage/${follows.UserID}`,
 										state: { UserID: follows.UserID, show: false }
 									}}>
 										<Card>
@@ -254,7 +252,7 @@ export default function HomePage() {
 							   >
 								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/User/${followed.UserID}`,
+										pathname: `/UserPage/${followed.UserID}`,
 										state: { UserID: followed.UserID, show: false }
 									}}>
 										<Card>
@@ -275,10 +273,7 @@ export default function HomePage() {
 				</div>
 			</div>
 
-			<div>
-
 			</div>
-		</div>
 	)
 }
 //

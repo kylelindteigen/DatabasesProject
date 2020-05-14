@@ -81,235 +81,64 @@ export default function UserPage(props) {
 	// const createData = (id, name, username, email, address, error_count) => {
 	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
 	// }
-    const history = useHistory();
-	fetch('http://localhost:8000/api/isRest', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({userid: props.match.params.UserID}),
-	})
-		.then(response => response.json())
-		.then((data) => {
-			console.log(data.Restaurant == "true")
-			if (data.Restaurant) {
-				history.push(`/RestaurantPage/${props.match.params.UserID}`)
-			} else {
 
-			}
-		})
-		.catch(error => { setReload(true); console.log("fetch error", error)});
 	const minRating = 1;
 	const maxRating = 5;
 	var name  = "fasdf"
-	var search = [];
-
-	var posts = [];
-
-	var follows = [];
-
-	var followed = [];
-
-	var reviews = [];
+	var results = [];
 
 	const classes = useStyles();
 
-	const [searchCards, setSearch] = useState(search);
-
-	const [postCards, setPosts] = useState(posts);
-
-	const [followsCards, setFollows] = useState(follows);
-
-	const [followedCards, setFollowed] = useState(followed);
-
-	const [reviewsCards, setReviews] = useState(reviews);
+	const [resultsCards, setResults] = useState(results);
 
 	const [reload, setReload] = useState(false);
 
-	const [nameUser, setName] = useState(name);
-
-	const follow = () => {
-		fetch('http://localhost:8000/api/follow', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({follower: localStorage.getItem("userid"), follow: props.match.params.UserID}),
-		})
-			.then(response => response.json())
-			.then((data) => {
-
-			})
-			.catch(error => { setReload(true); console.log("fetch error", error)});
-	}
-
-	// const sortSpeeches = (sortTerm) => {
-	// 	let sortedSpeeches = [];
-	// 	if (sortTerm === 'name') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-	// 	} else if (sortTerm === 'created') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_created > b.date_created) ? -1 : ((b.date_created > a.date_created) ? 1 : 0));
-	// 	} else if (sortTerm === 'updated') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_last_modified > b.date_last_modified) ? 1 : ((b.date_last_modified > a.date_last_modified) ? -1 : 0));
-	// 	}
-	// 	return setSpeechCards(sortedSpeeches);
-	// }
-
 	useEffect(() => {
-		fetch('http://localhost:8000/api/loadUserPage', {
+		fetch('http://localhost:8000/api/search', {
   			method: 'POST',
   			headers: {
   				'Content-Type': 'application/json',
   			},
-  			body: JSON.stringify({userid: props.match.params.UserID}),
+  			body: JSON.stringify({search: props.match.params.SearchTerm}),
 			credentials: "same-origin"
 		})
 		.then(response => response.json())
 		.then(r => {
-			posts = r.userposts
-			setPosts(posts)
-			follows = r.follows
-			setFollows(follows)
-			followed = r.followed
-			setFollowed(followed)
-			reviews = r.reviews
-			setReviews(reviews)
-			name = r.userinfo[0].Name
-			setName(name)
+			results = r.return
+			setResults(results)
 		})
 		.catch(error => console.log("fetch error", error));
 	}, [reload])
 
-	var setname = ()=>{
-		return(name)
-	}
 
 	return(
 		<div >
 			<NavBar/>
 			<div>
 				<div className="card text-white bg-primary mb-3">
-					<div className="card-header">
-						<div className="hero-container">
-							<div className="d-flex flex-column align-items-center justify-content-center">
-								<textarea className="logo d-flex justify-content-center" value={nameUser}></textarea>
-							</div>
 
-
-						</div>
-					</div>
 
 					<div className="card-body" id="posts">
 						<Grid container spacing={0}
 							direction="row"
 							justify="flex-start"
 							alignItems="baseline">
-							{postCards.map((post, index) => (
+							{resultsCards.map((results, index) => (
 								 <Grow
 								 in={true}
 								 style={{ transformOrigin: '0 0 0' }}
 								 timeout={index*500 }
 							   >
-								<Grid key={post.PostID} item sm={3} xs={"auto"} zeroMinWidth>
+								<Grid key={results.UserID} item sm={3} xs={"auto"} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/PostPage/${post.PostID}`,
-										state: { PostID: post.PostID, show: false }
+										pathname: `/UserPage/${results.UserID}`,
+										state: { PostID: results.UserID, show: false }
 									}}>
 										<Card>
 											<CardActions>
 												<ButtonBase>
 													<CardContent>
-														<b>{post.Name}</b>
-														<p>{post.Post}</p>
-														<p>{post.TimeStamp}</p>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{followsCards.map((follows, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/UserPage/${follows.UserID}`,
-										state: { UserID: follows.UserID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{follows.Name}</b>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{followedCards.map((followed, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/UserPage/${followed.UserID}`,
-										state: { UserID: followed.UserID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{followed.Name}</b>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{reviewsCards.map((reviews, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={reviews.UserID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/UserPage/${reviews.UserID}`,
-										state: { UserID: reviews.UserID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{reviews.RName}</b>
-														<p>{reviews.Description}</p>
+														<b>{results.Name}</b>
 													</CardContent>
 												</ButtonBase>
 											</CardActions>

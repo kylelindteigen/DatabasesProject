@@ -5,6 +5,9 @@ import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import SignUpRestaurant from "./Components/SignUpRestaurant";
 import RestaurantList from "./Components/RestaurantsList";
+import RestaurantPage from "./Components/RestaurantPage"
+import Post from "./Components/Post"
+import Search from "./Components/Search"
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Map from "./Components/Map";
@@ -97,16 +100,16 @@ class App extends Component {
 		return (
 			<Router>
 			<div className="main-content-container container-fluid d-flex flex-column">
-				<div className="row">
+				<div >
 					<CssBaseline/>
 					<Route exact path='/' component={Login}/>
 					<Route exact path='/SignUp' component={SignUp}/>
 					<Route exact path='/SignUpRestaurant' component={SignUpRestaurant}/>
 					<Route exact path='/HomePage' component={HomePage}/>
 					<Route exact path='/UserPage/:UserID' component={UserPage}/>
-					<Route exact path='/RestaurantPage/:UserID' component={HomePage}/>
-					<Route exact path='/Post/:UserID' component={HomePage}/>
-					<Route exact path='/Search/:SearchTerm' component={HomePage}/>
+					<Route exact path='/RestaurantPage/:UserID' component={RestaurantPage}/>
+					<Route exact path='/Post/:PostID' component={Post}/>
+					<Route exact path='/Search/:SearchTerm' component={Search}/>
 				</div>
 			</div>
 			</Router>

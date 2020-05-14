@@ -285,12 +285,22 @@ class SQL{
 	}
 
 	static getMenuItemRest(itemid){
-		return db.query("SELECT Restaurant.UserID, Restaurant.Name, Restaurant.Style, Username, Address FROM (SELECT User.UserID, Name, Username, Email, Style, Address FROM Restaurant, User WHERE Restaurant.UserID = User.UserID) AS Restaurant, MenuItem WHERE Restaurant.UserID = MenuItem.UserID AND MenuItem.ItemID =" + itemid, function (err, result, fields) {
-			if(err) throw err;
-			console.log(result);
+		return new Promise(async (resolve,reject) =>{
+				try{
+					 db.query("SELECT Restaurant.UserID, Restaurant.Name, Restaurant.Style, Username, Address FROM (SELECT User.UserID, Name, Username, Email, Style, Address FROM Restaurant, User WHERE Restaurant.UserID = User.UserID) AS Restaurant, MenuItem WHERE Restaurant.UserID = MenuItem.UserID AND MenuItem.ItemID =" + itemid, function (err, result, fields) {
+						if(err) reject(err);
+						else{
+							resolve(result)
+						}
+					})
+				}catch(e){
+					reject(e)
+				}
+
+
 		})
 	}
-
+	
 	static searchStyleRestaurant(style){
 		return db.query("SELECT DISTINCT * FROM (SELECT User.UserID, Name, Username, Email, Style, Address FROM Restaurant, User WHERE Restaurant.UserID = User.UserID) AS R WHERE Style = \"" + style + "\"", function (err, result, fields) {
 			if(err) throw err;
@@ -322,7 +332,7 @@ class SQL{
 	static searchUserName(name){
 		return new Promise(async (resolve,reject) =>{
 				try{
-					 db.query("SELECT DISTINCT * FROM User WHERE Name LIKE \"" + name + "\"", function (err, result, fields) {
+					 db.query("SELECT DISTINCT * FROM User WHERE Name LIKE \"%" + name + "%\"", function (err, result, fields) {
 						if(err) reject(err);
 						else{
 							resolve(result)

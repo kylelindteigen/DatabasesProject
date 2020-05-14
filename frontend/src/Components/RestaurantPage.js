@@ -12,6 +12,9 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import { useHistory } from 'react-router-dom';
+
+import NavBar from './NavBar';
 import "./RestaurantsList.css";
 
 const useStyles = makeStyles(theme => ({
@@ -78,9 +81,10 @@ export default function RestaurantPage(props) {
 	// const createData = (id, name, username, email, address, error_count) => {
 	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
 	// }
-
+    const history = useHistory();
 	const minRating = 1;
 	const maxRating = 5;
+	var name  = "fasdf"
 	var search = [];
 
 	var posts = [];
@@ -108,6 +112,8 @@ export default function RestaurantPage(props) {
 	const [menuCards, setMenu] = useState(menu);
 
 	const [reload, setReload] = useState(false);
+
+	const [nameUser, setName] = useState(name);
 
 	const follow = () => {
 		fetch('http://localhost:8000/api/follow', {
@@ -147,7 +153,7 @@ export default function RestaurantPage(props) {
 		})
 		.then(response => response.json())
 		.then(r => {
-			posts = r.followsposts
+			posts = r.userposts
 			setPosts(posts)
 			follows = r.follows
 			setFollows(follows)
@@ -155,29 +161,27 @@ export default function RestaurantPage(props) {
 			setFollowed(followed)
 			reviews = r.reviews
 			setReviews(reviews)
+			name = r.userinfo[0].Name
+			setName(name)
+			menu = r.menu
+			setMenu(menu)
 		})
 		.catch(error => console.log("fetch error", error));
 	}, [reload])
 
+	var setname = ()=>{
+		return(name)
+	}
+
 	return(
-		<div className="restaurants-list-container col-12 col-lg-4 p-2 order-2 order-lg-1">
+		<div >
+			<NavBar/>
 			<div>
 				<div className="card text-white bg-primary mb-3">
 					<div className="card-header">
 						<div className="hero-container">
 							<div className="d-flex flex-column align-items-center justify-content-center">
-								<h1 className="logo d-flex justify-content-center">iEat</h1>
-								<a
-									href=""
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									<small>
-										<i></i>
-									</small>
-									<button type="button" onClick={follow()} >Follow</button>
-									{/* <i className="fas fa-utensils"></i> */}
-								</a>
+								<textarea className="logo d-flex justify-content-center" value={nameUser}></textarea>
 							</div>
 
 
@@ -317,15 +321,13 @@ export default function RestaurantPage(props) {
 								<Grid key={menu.ItemID} item sm={3} xs={"auto"} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
 										pathname: `/UserPage/${menu.ItemID}`,
-										state: { UserID: menu.ItemID, show: false }
+										state: { ItemID: menu.ItemID, show: false }
 									}}>
 										<Card>
 											<CardActions>
 												<ButtonBase>
 													<CardContent>
 														<b>{menu.Name}</b>
-														<p>{menu.Price}</p>
-														<p>{menu.NutritionalInfromation}</p>
 													</CardContent>
 												</ButtonBase>
 											</CardActions>

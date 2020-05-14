@@ -73,8 +73,10 @@ export default function Login() {
   			.then(response => response.json())
   			.then((data) => {
   				if (data.status == "success") {
+					console.log(data)
 					localStorage.setItem("token", data.token);
 					localStorage.setItem("userid", data.userid);
+					localStorage.setItem("name", data.name);
 					dispatch(loginUser(data));
 					history.push((onLogin(data.token)));
   				} else {

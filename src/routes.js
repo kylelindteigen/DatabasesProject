@@ -60,7 +60,7 @@ Router.post('/signUpRest', function(req, res){
 	var email = json_data.email
 	var password = json_data.password
 	var style = json_data.style
-	var address = json_data.address 
+	var address = json_data.address
 
 	sql.createRestUser(username, name, email, password, style, address).then(s =>{
 		s.status = "success"

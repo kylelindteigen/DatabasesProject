@@ -96,16 +96,15 @@ class SQL{
 	}
 
 	static createComment(userid, postid, comment){
-		return db.query("INSERT INTO User(UserID, PostID, TimeStamp, Comment) VALUES("+userid+","+postid+",NOW(), \""+comment+"\"", function (err, result, fields) {
-			if(err) throw err;
-			console.log(result);
-		})
-	}
-
-	static createComment(userid, postid, comment){
-		return db.query("INSERT INTO User(UserID, PostID, TimeStamp, Comment) VALUES("+userid+","+postid+",NOW(), \""+comment+"\"", function (err, result, fields) {
-			if(err) throw err;
-			console.log(result);
+		return new Promise(async (resolve,reject) =>{
+			try{
+				db.query("INSERT INTO Comment(UserID, PostID, TimeStamp, Comment) VALUES("+userid+","+postid+",NOW(), \""+comment+"\")", function (err, result, fields) {
+					if(err) throw err;
+					resolve(result);
+				});
+			}catch(e){
+				reject(e)
+			}
 		})
 	}
 
@@ -198,6 +197,23 @@ class SQL{
 		return new Promise(async (resolve,reject) =>{
 				try{
 					db.query("INSERT INTO Follows(UserID1, UserID2) VALUES("+follower+", "+follow+")",  function (err, result, fields) {
+						if(err) reject(err);
+						else{
+							resolve(result)
+						}
+					})
+				}catch(e){
+					reject(e)
+				}
+
+
+		})
+	}
+
+	static getPost(postid){
+		return new Promise(async (resolve,reject) =>{
+				try{
+					db.query("SELECT C.UserID, Name, Username, TimeStamp, Post FROM (SELECT UserID, PostID, TimeStamp, Post FROM Post WHERE PostID = "+postid+") AS C, User WHERE User.UserID = C.UserID", function (err, result, fields) {
 						if(err) reject(err);
 						else{
 							resolve(result)

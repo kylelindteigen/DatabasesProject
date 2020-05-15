@@ -13,6 +13,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import { useHistory } from 'react-router-dom';
+import Popup from "reactjs-popup";
 
 import NavBar from './NavBar';
 import "./RestaurantsList.css";
@@ -81,11 +82,31 @@ export default function Post(props) {
 	// const createData = (id, name, username, email, address, error_count) => {
 	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
 	// }
+	const sendComment = ()=>{
+		console.log("hello")
+		fetch('http://localhost:8000/api/saveComment', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({userid: localStorage.getItem("userid"), postid: props.match.params.PostID, comment: userComment}),
+			credentials: "same-origin"
+		})
+		.then(response => response.json())
+		.then(r => {
+		})
+		.catch(error => console.log("fetch error", error));
+	}
+	var userComment = ""
+	const setUserComment = (event) => {
+		userComment = event.target.value
+	}
     const history = useHistory();
 
 	const minRating = 1;
 	const maxRating = 5;
 	var name  = "fasdf"
+	var post = "asld;kfj"
 	var comment = [];
 
 	const classes = useStyles();
@@ -96,32 +117,7 @@ export default function Post(props) {
 
 	const [nameUser, setName] = useState(name);
 
-	const follow = () => {
-		fetch('http://localhost:8000/api/follow', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({follower: localStorage.getItem("userid"), follow: props.match.params.UserID}),
-		})
-			.then(response => response.json())
-			.then((data) => {
-
-			})
-			.catch(error => { setReload(true); console.log("fetch error", error)});
-	}
-
-	// const sortSpeeches = (sortTerm) => {
-	// 	let sortedSpeeches = [];
-	// 	if (sortTerm === 'name') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-	// 	} else if (sortTerm === 'created') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_created > b.date_created) ? -1 : ((b.date_created > a.date_created) ? 1 : 0));
-	// 	} else if (sortTerm === 'updated') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_last_modified > b.date_last_modified) ? 1 : ((b.date_last_modified > a.date_last_modified) ? -1 : 0));
-	// 	}
-	// 	return setSpeechCards(sortedSpeeches);
-	// }
+	const [postUser, setPost] = useState(post);
 
 	useEffect(() => {
 		fetch('http://localhost:8000/api/loadPost', {
@@ -134,8 +130,11 @@ export default function Post(props) {
 		})
 		.then(response => response.json())
 		.then(r => {
-			//name = r.userinfo[0].Name
+			console.log(r)
+			name = r.postinfo.Name
 			setName(name)
+			post = r.postinfo.Post
+			setPost(post)
 			comment = r.comments
 			setComment(comment)
 		})
@@ -155,7 +154,17 @@ export default function Post(props) {
 						<div className="hero-container">
 							<div className="d-flex flex-column align-items-center justify-content-center">
 								<textarea className="logo d-flex justify-content-center" value={nameUser}></textarea>
+								<textarea className="logo d-flex justify-content-center" value={postUser}></textarea>
 							</div>
+							<Popup trigger = {<button>Comment</button>} position = "right center">
+								{close => (
+							      <div>
+								  <textarea onKeyUp={setUserComment}></textarea>
+  									<button onClick={sendComment}>Submit</button>
+    								<button onClick={close}>Close</button>
+							      </div>
+							    )}
+							</Popup>
 
 
 						</div>

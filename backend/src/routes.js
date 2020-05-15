@@ -156,9 +156,13 @@ Router.post('/loadRestPage', function(req, res){
 Router.post('/loadPost', function(req, res){
 	const json_data = req.body
 	var postid = json_data.postid
-
 	sql.getPostComments(postid).then(s =>{
-		res.send(JSON.stringify({comments: s}))
+		sql.getPost(postid).then(p =>{
+			res.send(JSON.stringify({comments: s, postinfo: p[0]}))
+		}).catch(()=>{
+
+		})
+
 	}).catch(()=>{
 
 	})
@@ -176,22 +180,26 @@ Router.get('/follow', function(req, res){
 	})
 })
 
-Router.get('/getPostComments', function(req, res){
-	const json_data = req.body
-	var postid = json_data.postid
-
-	sql.getPostComments(postid).then(s=>{
-		res.send(s)
-	}).catch(()=>{
-
-	})
-})
-
 Router.post('/savePost', function(req, res){
 	const json_data = req.body
 	var userid = json_data.userid
 	var post = json_data.post
 	sql.createPost(userid, post).then(s =>{
+		res.send(JSON.stringify({status: "success"}))
+	}).catch(() =>{
+		res.send("failed")
+
+	}
+	)
+
+})
+
+Router.post('/saveComment', function(req, res){
+	const json_data = req.body
+	var userid = json_data.userid
+	var postid = json_data.postid
+	var comment = json_data.comment
+	sql.createComment(userid, postid, comment).then(s =>{
 		res.send(JSON.stringify({status: "success"}))
 	}).catch(() =>{
 		res.send("failed")

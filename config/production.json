@@ -1,0 +1,12 @@
+{
+    "DATABASE":{
+        "database":"wellspokn",
+        "username":"postgres",
+        "password": "ARandomSetOfWordsArrangedLikeThis45678736478930948576748",
+        "host": "localhost",
+        "dialect": "postgres"
+    },
+    "SESSION_STORE":"redis",
+    "PORT":8080,
+    "ROOT_ROUTE":"/"
+}

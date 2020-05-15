@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from "react-redux";
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -7,6 +8,11 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouteLink } from 'react-router-dom';
+import useLogin from './useLogin';
+import { useHistory } from 'react-router-dom';
+import { loginUser } from './actions';
+import { useHomePage } from './useHomePage'
+import HomePage from './HomePage'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -29,13 +35,44 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
-  const classes = useStyles();
+	const classes = useStyles();
+    const history = useHistory();
+
+    const dispatch = useDispatch();
+    const [failed, setFailed] = React.useState(false);
+    const { onLogin, onPageLoad } = useHomePage();
+    const signupSubmit = () => {
+		localStorage.clear();
+    		fetch('/api/signUp', {
+    			method: 'POST',
+    			headers: {
+    				'Content-Type': 'application/json',
+    			},
+    			body: JSON.stringify(inputs),
+    		})
+    			.then(response => response.json())
+    			.then((data) => {
+    				if (data.status == "success") {
+						console.log(data)
+						dispatch(loginUser(data));
+						localStorage.setItem("token", data.token);
+						localStorage.setItem("userid", data.insertId);
+						localStorage.setItem("name", inputs.firstName + " " + inputs.lastName);
+	  					history.push((onLogin(data)));
+    				} else {
+	  					console.log("fail")
+    				}
+    			})
+    			.catch(error => { setFailed(true); console.log("fetch error", error)});
+    }
+    const { inputs, handleInputChange, handleSubmit } = useLogin(signupSubmit);
+
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -46,6 +83,7 @@ export default function SignUp() {
                 fullWidth
                 id="firstName"
                 label="First Name"
+				onChange={handleInputChange}
                 autoFocus
               />
             </Grid>
@@ -58,6 +96,19 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+				onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+				onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -69,6 +120,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+				onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -81,6 +133,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+				onChange={handleInputChange}
               />
             </Grid>
           </Grid>
@@ -95,7 +148,7 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link component={RouteLink} to="/login" variant="body2">
+              <Link component={RouteLink} to="/" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

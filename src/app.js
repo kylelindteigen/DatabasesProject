@@ -1,12 +1,12 @@
 const express = require('express');
 var cookieParser = require('cookie-parser')
-const session = require('express-session');
+// const session = require('express-session');
 const cors = require('cors')
 // const redis = require('redis')
 // var redisClient = redis.createClient({host: 'localhost', port: 6379, client: redisClient, ttl: 86400});
 // var redisStore = require('connect-redis')(session)
 var bodyParser = require('body-parser')
-const passport = require('./passport.js');
+// const passport = require('./passport.js');
 const getSessionStore = require('./sessionStore.js');
 const app = express();
 const path = require('path')
@@ -16,17 +16,17 @@ const path = require('path')
 // redisClient.on('error', (err) => {
 //   console.log('Redis error: ', err);
 // });
- 
-app.use(session({
-	secret: "shhhh",
-	cookie:{
-	secure: "auto",
-	httpOnly: false},
-	resave: false,
-	saveUninitialized: false
-}));
-app.use(passport.initialize())
-app.use(passport.session())
+//
+// app.use(session({
+// 	secret: "shhhh",
+// 	cookie:{
+// 	secure: "auto",
+// 	httpOnly: false},
+// 	resave: false,
+// 	saveUninitialized: false
+// }));
+// app.use(passport.initialize())
+// app.use(passport.session())
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'client/build')));

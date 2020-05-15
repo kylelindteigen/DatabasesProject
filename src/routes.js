@@ -1,5 +1,5 @@
 const express = require('express')
-const session = require('express-session');
+// const session = require('express-session');
 
 const sql = require('./sql.js')
 
@@ -8,13 +8,13 @@ var Router = express.Router();
 
 
 Router.get('/', function(req,res){
-	var sess = req.session;
+	// var sess = req.session;
 	req.session.userid = "";
 	res.sendFile('index.html')
 })
 
 Router.post('/login', function(req, res){
-	var sess = req.session;
+	// var sess = req.session;
 	const json_data = req.body
 	var email = json_data.email
 	var password = json_data.password

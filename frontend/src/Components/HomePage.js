@@ -14,7 +14,6 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import Popup from "reactjs-popup";
 import RestaurantsList from "./RestaurantsList.js"
 import Map from "./Map.js"
-import { TweetBody } from './Tweet.js'
 
 import NavBar from './NavBar';
 import "./RestaurantsList.css";

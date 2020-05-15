@@ -19,63 +19,7 @@ import NavBar from './NavBar';
 import "./RestaurantsList.css";
 
 const useStyles = makeStyles(theme => ({
-	// cardtitle: {
-	// 	color: var(--textColor);
-	// },
-	//
-	// card: {
-	// 	backgroundcolor: var(--restaurantBackColor);
-	// },
-	//
-	// restaurantslistcontainer: {
-	// 	height: '100vh',
-	// 	overflow: 'scroll',
-	// 	backgroundcolor: var(--restaurantContainerBackColor);
-	// },
-	//
-	// .bg-primary {
-	// 	background-color: var(--headerBackColor) !important;
-	// }
-	//
-	// .card-form {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .card-form:hover {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .btn-form {
-	// 	background-color: #ffb400;
-	// }
-	//
-	// .fa-sort-amount-down {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-sort-amount-up {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-star {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-utensils {
-	// 	color: var(--icon);
-	// }
-	//
-	// .hidden {
-	// 	display: none;
-	// }
-	//
-	// @media only screen and (max-width: 991px) {
-	// 	.restaurants-list-container {
-	// 		height: 50vh;
-	// 	}
-	// }
+
 }));
 
 export default function RestaurantPage(props) {
@@ -251,7 +195,7 @@ export default function RestaurantPage(props) {
 							   >
 								<Grid key={post.PostID} item sm={3} xs={"auto"} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/PostPage/${post.PostID}`,
+										pathname: `/Post/${post.PostID}`,
 										state: { PostID: post.PostID, show: false }
 									}}>
 										<Card>

@@ -181,7 +181,7 @@ export default function UserPage(props) {
 							   >
 								<Grid key={post.PostID}  xs={12} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/PostPage/${post.PostID}`,
+										pathname: `/Post/${post.PostID}`,
 										state: { PostID: post.PostID, show: false }
 									}}>
 										<Card>

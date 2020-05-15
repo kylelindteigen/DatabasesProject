@@ -15,70 +15,12 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import "./RestaurantsList.css";
 
 const useStyles = makeStyles(theme => ({
-	// cardtitle: {
-	// 	color: var(--textColor);
-	// },
-	//
-	// card: {
-	// 	backgroundcolor: var(--restaurantBackColor);
-	// },
-	//
-	// restaurantslistcontainer: {
-	// 	height: '100vh',
-	// 	overflow: 'scroll',
-	// 	backgroundcolor: var(--restaurantContainerBackColor);
-	// },
-	//
-	// .bg-primary {
-	// 	background-color: var(--headerBackColor) !important;
-	// }
-	//
-	// .card-form {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .card-form:hover {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .btn-form {
-	// 	background-color: #ffb400;
-	// }
-	//
-	// .fa-sort-amount-down {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-sort-amount-up {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-star {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-utensils {
-	// 	color: var(--icon);
-	// }
-	//
-	// .hidden {
-	// 	display: none;
-	// }
-	//
-	// @media only screen and (max-width: 991px) {
-	// 	.restaurants-list-container {
-	// 		height: 50vh;
-	// 	}
-	// }
+
 }));
 
 export default function UserPage(props) {
-	// const createData = (id, name, username, email, address, error_count) => {
-	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
-	// }
-	fetch('http://localhost:8000/api/isRestaurant', {
+	console.log(props.match.params.UserID)
+	fetch('/api/isRestaurant', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -115,7 +57,7 @@ export default function UserPage(props) {
 	const [reload, setReload] = useState(false);
 
 	const follow = () => {
-		fetch('http://localhost:8000/api/follow', {
+		fetch('/api/follow', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -129,20 +71,8 @@ export default function UserPage(props) {
 			.catch(error => { setReload(true); console.log("fetch error", error)});
 	}
 
-	// const sortSpeeches = (sortTerm) => {
-	// 	let sortedSpeeches = [];
-	// 	if (sortTerm === 'name') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-	// 	} else if (sortTerm === 'created') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_created > b.date_created) ? -1 : ((b.date_created > a.date_created) ? 1 : 0));
-	// 	} else if (sortTerm === 'updated') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_last_modified > b.date_last_modified) ? 1 : ((b.date_last_modified > a.date_last_modified) ? -1 : 0));
-	// 	}
-	// 	return setSpeechCards(sortedSpeeches);
-	// }
-
 	useEffect(() => {
-		fetch('http://localhost:8000/api/getPostComments', {
+		fetch('/api/getPostComments', {
   			method: 'POST',
   			headers: {
   				'Content-Type': 'application/json',

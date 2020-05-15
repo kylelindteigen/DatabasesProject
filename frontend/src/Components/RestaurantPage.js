@@ -125,7 +125,7 @@ export default function RestaurantPage(props) {
 		})
 			.then(response => response.json())
 			.then((data) => {
-
+				reload();
 			})
 			.catch(error => { setReload(true); console.log("fetch error", error)});
 	}
@@ -183,6 +183,7 @@ export default function RestaurantPage(props) {
 							<div className="d-flex flex-column align-items-center justify-content-center">
 								<textarea className="logo d-flex justify-content-center" value={nameUser}></textarea>
 							</div>
+							<button onClick={follow}>follow</button>
 
 
 						</div>

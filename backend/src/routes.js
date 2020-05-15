@@ -169,7 +169,7 @@ Router.post('/loadPost', function(req, res){
 
 })
 
-Router.get('/follow', function(req, res){
+Router.post('/follow', function(req, res){
 	const json_data = req.body
 	var follower = json_data.follower
 	var follow = json_data.follow

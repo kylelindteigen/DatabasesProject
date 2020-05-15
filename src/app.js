@@ -16,7 +16,7 @@ const path = require('path')
 // redisClient.on('error', (err) => {
 //   console.log('Redis error: ', err);
 // });
-
+ 
 app.use(session({
 	secret: "shhhh",
 	cookie:{

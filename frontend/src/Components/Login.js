@@ -62,7 +62,7 @@ export default function Login() {
 		"email" : "email",
 		"password" : "password"
 	}})
-  		fetch('http://localhost:8000/api/login', {
+  		fetch('/api/login', {
   			method: 'POST',
   			headers: {
   				'Content-Type': 'application/json',
@@ -73,10 +73,11 @@ export default function Login() {
   			.then(response => response.json())
   			.then((data) => {
   				if (data.status == "success") {
-					console.log(data)
 					localStorage.setItem("token", data.token);
 					localStorage.setItem("userid", data.userid);
 					localStorage.setItem("name", data.name);
+					console.log(loginUser(data))
+					console.log((onLogin(data.token)))
 					dispatch(loginUser(data));
 					history.push((onLogin(data.token)));
   				} else {

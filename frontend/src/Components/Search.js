@@ -94,7 +94,7 @@ export default function UserPage(props) {
 	const [reload, setReload] = useState(false);
 
 	useEffect(() => {
-		fetch('http://localhost:8000/api/search', {
+		fetch('/api/search', {
   			method: 'POST',
   			headers: {
   				'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ export default function UserPage(props) {
 
 
 					<div className="card-body" id="posts">
-						<Grid container spacing={0}
+						<Grid container spacing={1}
 							direction="row"
 							justify="flex-start"
 							alignItems="baseline">

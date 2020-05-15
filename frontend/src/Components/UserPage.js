@@ -13,76 +13,22 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import { useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { useDispatch } from "react-redux";
 
 import NavBar from './NavBar';
 import "./RestaurantsList.css";
 
 const useStyles = makeStyles(theme => ({
-	// cardtitle: {
-	// 	color: var(--textColor);
-	// },
-	//
-	// card: {
-	// 	backgroundcolor: var(--restaurantBackColor);
-	// },
-	//
-	// restaurantslistcontainer: {
-	// 	height: '100vh',
-	// 	overflow: 'scroll',
-	// 	backgroundcolor: var(--restaurantContainerBackColor);
-	// },
-	//
-	// .bg-primary {
-	// 	background-color: var(--headerBackColor) !important;
-	// }
-	//
-	// .card-form {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .card-form:hover {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .btn-form {
-	// 	background-color: #ffb400;
-	// }
-	//
-	// .fa-sort-amount-down {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-sort-amount-up {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-star {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-utensils {
-	// 	color: var(--icon);
-	// }
-	//
-	// .hidden {
-	// 	display: none;
-	// }
-	//
-	// @media only screen and (max-width: 991px) {
-	// 	.restaurants-list-container {
-	// 		height: 50vh;
-	// 	}
-	// }
+
 }));
 
 export default function UserPage(props) {
-	// const createData = (id, name, username, email, address, error_count) => {
-	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
-	// }
+
+
+    const dispatch = useDispatch();
     const history = useHistory();
-	fetch('http://localhost:8000/api/isRest', {
+	fetch('/api/isRest', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -128,7 +74,7 @@ export default function UserPage(props) {
 	const [nameUser, setName] = useState(name);
 
 	const follow = () => {
-		fetch('http://localhost:8000/api/follow', {
+		fetch('/api/follow', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -143,7 +89,7 @@ export default function UserPage(props) {
 	}
 
 	useEffect(() => {
-		fetch('http://localhost:8000/api/loadUserPage', {
+		fetch('/api/loadUserPage', {
   			method: 'POST',
   			headers: {
   				'Content-Type': 'application/json',
@@ -166,7 +112,9 @@ export default function UserPage(props) {
 		})
 		.catch(error => console.log("fetch error", error));
 	}, [reload])
-
+	const refresh = ()=> {
+        history.push(props.location.pathname);
+      }
 	var setname = ()=>{
 		return(name)
 	}
@@ -175,7 +123,40 @@ export default function UserPage(props) {
 		<div >
 			<NavBar/>
 			<div>
-				<div className="card text-white bg-primary mb-3">
+			<div className="grid">
+			<h>Follows</h>
+			<Grid container spacing={0}
+				direction="column"
+				justify="flex-start"
+				alignItems="baseline">
+				{followsCards.map((follows, index) => (
+					 <Grow
+					 in={true}
+					 style={{ transformOrigin: '0 0 0' }}
+					 timeout={index*500 }
+				   >
+					<Grid key={follows.UserID} xs={12} zeroMinWidth>
+						<Link style={{ textDecoration: 'none' }} to={{
+							pathname: `/UserPage/${follows.UserID}`,
+							state: { UserID: follows.UserID, show: false }
+						}} >
+							<Card >
+								<CardActions>
+									<ButtonBase onClick={refresh}>
+										<CardContent>
+											<b>{follows.Name}</b>
+										</CardContent>
+									</ButtonBase>
+								</CardActions>
+							</Card>
+						</Link>
+					</Grid>
+					</Grow>
+				))}
+			</Grid>
+			</div>
+			<div className="div">
+				<div className="card">
 					<div className="card-header">
 						<div className="hero-container">
 							<div className="d-flex flex-column align-items-center justify-content-center">
@@ -187,6 +168,7 @@ export default function UserPage(props) {
 					</div>
 
 					<div className="card-body" id="posts">
+					<h>Posts</h>
 						<Grid container spacing={0}
 							direction="row"
 							justify="flex-start"
@@ -197,7 +179,7 @@ export default function UserPage(props) {
 								 style={{ transformOrigin: '0 0 0' }}
 								 timeout={index*500 }
 							   >
-								<Grid key={post.PostID} item sm={3} xs={"auto"} zeroMinWidth>
+								<Grid key={post.PostID}  xs={12} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
 										pathname: `/PostPage/${post.PostID}`,
 										state: { PostID: post.PostID, show: false }
@@ -218,64 +200,46 @@ export default function UserPage(props) {
 								</Grow>
 							))}
 						</Grid>
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{followsCards.map((follows, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/UserPage/${follows.UserID}`,
-										state: { UserID: follows.UserID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{follows.Name}</b>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{followedCards.map((followed, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/UserPage/${followed.UserID}`,
-										state: { UserID: followed.UserID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{followed.Name}</b>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
+						</div>
+
+				</div>
+			</div>
+
+			<div className="grid">
+			<h>Followed By</h>
+			<Grid container spacing={0}
+				direction="column"
+				justify="flex-start"
+				alignItems="baseline">
+				{followedCards.map((followed, index) => (
+					 <Grow
+					 in={true}
+					 style={{ transformOrigin: '0 0 0' }}
+					 timeout={index*500 }
+				   >
+					<Grid key={follows.UserID} xs={12} zeroMinWidth>
+						<Link style={{ textDecoration: 'none' }} to={{
+							pathname: `/UserPage/${followed.UserID}`,
+							state: { UserID: followed.UserID, show: false }
+						}}>
+							<Card>
+								<CardActions>
+									<ButtonBase>
+										<CardContent>
+											<b>{followed.Name}</b>
+										</CardContent>
+									</ButtonBase>
+								</CardActions>
+							</Card>
+						</Link>
+					</Grid>
+					</Grow>
+				))}
+			</Grid>
+
+			</div>
+						<div className="grid">
+						<h>Reviews</h>
 						<Grid container spacing={0}
 							direction="row"
 							justify="flex-start"
@@ -286,7 +250,7 @@ export default function UserPage(props) {
 								 style={{ transformOrigin: '0 0 0' }}
 								 timeout={index*500 }
 							   >
-								<Grid key={reviews.UserID} item sm={3} xs={"auto"} zeroMinWidth>
+								<Grid key={reviews.UserID} xs={12} zeroMinWidth>
 									<Link style={{ textDecoration: 'none' }} to={{
 										pathname: `/UserPage/${reviews.UserID}`,
 										state: { UserID: reviews.UserID, show: false }
@@ -295,7 +259,7 @@ export default function UserPage(props) {
 											<CardActions>
 												<ButtonBase>
 													<CardContent>
-														<b>{reviews.RName}</b>
+														<b alignte>{reviews.RName}</b>
 														<p>{reviews.Description}</p>
 													</CardContent>
 												</ButtonBase>
@@ -306,12 +270,8 @@ export default function UserPage(props) {
 								</Grow>
 							))}
 						</Grid>
-					</div>
-				</div>
-			</div>
 
-			<div>
-
+						</div>
 			</div>
 		</div>
 	)

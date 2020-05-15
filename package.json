@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Database project backend",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon",
+	"heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "actionhero": "^22.0.9",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "config": "^3.3.1",
+    "connect-redis": "^4.0.4",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "jx": "^0.1.3",
+    "mysql": "^2.18.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "redis": "^3.0.2",
+    "requirejs": "^2.3.6",
+    "sessionstore": "^1.3.7"
+  },
+  "devDependencies": {},
+  "keywords": []
+}

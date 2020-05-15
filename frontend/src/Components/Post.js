@@ -19,72 +19,14 @@ import NavBar from './NavBar';
 import "./RestaurantsList.css";
 
 const useStyles = makeStyles(theme => ({
-	// cardtitle: {
-	// 	color: var(--textColor);
-	// },
-	//
-	// card: {
-	// 	backgroundcolor: var(--restaurantBackColor);
-	// },
-	//
-	// restaurantslistcontainer: {
-	// 	height: '100vh',
-	// 	overflow: 'scroll',
-	// 	backgroundcolor: var(--restaurantContainerBackColor);
-	// },
-	//
-	// .bg-primary {
-	// 	background-color: var(--headerBackColor) !important;
-	// }
-	//
-	// .card-form {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .card-form:hover {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .btn-form {
-	// 	background-color: #ffb400;
-	// }
-	//
-	// .fa-sort-amount-down {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-sort-amount-up {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-star {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-utensils {
-	// 	color: var(--icon);
-	// }
-	//
-	// .hidden {
-	// 	display: none;
-	// }
-	//
-	// @media only screen and (max-width: 991px) {
-	// 	.restaurants-list-container {
-	// 		height: 50vh;
-	// 	}
-	// }
+
 }));
 
 export default function Post(props) {
-	// const createData = (id, name, username, email, address, error_count) => {
-	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
-	// }
+
 	const sendComment = ()=>{
 		console.log("hello")
-		fetch('http://localhost:8000/api/saveComment', {
+		fetch('/api/saveComment', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -108,10 +50,13 @@ export default function Post(props) {
 	var name  = "fasdf"
 	var post = "asld;kfj"
 	var comment = [];
+	var userid = "";
 
 	const classes = useStyles();
 
 	const [commentCards, setComment] = useState(comment);
+
+	const [useridUser, setUserid] = useState(userid);
 
 	const [reload, setReload] = useState(false);
 
@@ -120,7 +65,7 @@ export default function Post(props) {
 	const [postUser, setPost] = useState(post);
 
 	useEffect(() => {
-		fetch('http://localhost:8000/api/loadPost', {
+		fetch('/api/loadPost', {
   			method: 'POST',
   			headers: {
   				'Content-Type': 'application/json',
@@ -133,6 +78,9 @@ export default function Post(props) {
 			console.log(r)
 			name = r.postinfo.Name
 			setName(name)
+			userid = r.postinfo.UserID
+			setUserid(userid)
+			console.log(userid)
 			post = r.postinfo.Post
 			setPost(post)
 			comment = r.comments
@@ -153,16 +101,30 @@ export default function Post(props) {
 					<div className="card-header">
 						<div className="hero-container">
 							<div className="d-flex flex-column align-items-center justify-content-center">
-								<textarea className="logo d-flex justify-content-center" value={nameUser}></textarea>
-								<textarea className="logo d-flex justify-content-center" value={postUser}></textarea>
+							<Link style={{ textDecoration: 'none' }} to={{
+								pathname: `/UserPage/${useridUser}`
+							}}>
+							<Card>
+								<CardActions>
+									<ButtonBase>
+										<CardContent>
+											<b>{nameUser}</b>
+											<p>{postUser}</p>
+										</CardContent>
+									</ButtonBase>
+								</CardActions>
+							</Card>
+							</Link>
 							</div>
-							<Popup trigger = {<button>Comment</button>} position = "right center">
+							<Popup modal="true" trigger = {<button>Comment</button>}>
 								{close => (
-							      <div>
-								  <textarea onKeyUp={setUserComment}></textarea>
-  									<button onClick={sendComment}>Submit</button>
-    								<button onClick={close}>Close</button>
-							      </div>
+  							      <div alignItems="center">
+  								  <div alignItems="center">
+  								  <textarea rows="5" cols="125" onKeyUp={setUserComment}></textarea>
+  								  </div>
+    									<button onClick={sendComment}>Submit</button>
+      								<button onClick={close}>Close</button>
+  							      </div>
 							    )}
 							</Popup>
 

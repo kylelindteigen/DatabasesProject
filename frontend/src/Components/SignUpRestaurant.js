@@ -43,7 +43,7 @@ export default function SignUpRestaurant() {
     const { onLogin, onPageLoad } = useHomePage();
     const signupSubmit = () => {
 		localStorage.clear();
-    		fetch('http://localhost:8000/api/signUpRest', {
+    		fetch('/api/signUpRest', {
     			method: 'POST',
     			headers: {
     				'Content-Type': 'application/json',
@@ -56,6 +56,7 @@ export default function SignUpRestaurant() {
 						dispatch(loginUser(data));
 						localStorage.setItem("token", data.token);
 						localStorage.setItem("userid", data.insertId);
+						localStorage.setItem("name", inputs.name);
 
 	  					history.push((onLogin(data)));
     					console.log(data)
@@ -74,29 +75,17 @@ export default function SignUpRestaurant() {
       <div className={classes.paper}>
         <form className={classes.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="name"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="name"
+                label="Name"
 				onChange={handleInputChange}
                 autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-				onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12}>

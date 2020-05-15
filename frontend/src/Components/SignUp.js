@@ -43,7 +43,7 @@ export default function SignUp() {
     const { onLogin, onPageLoad } = useHomePage();
     const signupSubmit = () => {
 		localStorage.clear();
-    		fetch('http://localhost:8000/api/signUp', {
+    		fetch('/api/signUp', {
     			method: 'POST',
     			headers: {
     				'Content-Type': 'application/json',
@@ -53,9 +53,11 @@ export default function SignUp() {
     			.then(response => response.json())
     			.then((data) => {
     				if (data.status == "success") {
+						console.log(data)
 						dispatch(loginUser(data));
 						localStorage.setItem("token", data.token);
 						localStorage.setItem("userid", data.insertId);
+						localStorage.setItem("name", inputs.firstName + " " + inputs.lastName);
 	  					history.push((onLogin(data)));
     				} else {
 	  					console.log("fail")

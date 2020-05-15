@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, useState, useEffect } from "react";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -73,6 +73,8 @@ export default function NavBar(props) {
 	const classes = useStyles();
     const history = useHistory();
 
+	const [reload, setReload] = useState(false);
+
 	const [state, setState] = React.useState({
 		top: false,
 		left: false,
@@ -102,6 +104,7 @@ export default function NavBar(props) {
 	const handleSearch = (event) => {
 		if(event.keyCode == 13){
 			history.push(`/Search/${event.target.value}`)
+			// reload()
 		}
 	}
 

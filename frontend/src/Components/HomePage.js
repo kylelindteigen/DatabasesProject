@@ -11,6 +11,7 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import Popup from "reactjs-popup";
 
 import NavBar from './NavBar';
 import "./RestaurantsList.css";
@@ -79,9 +80,22 @@ export default function HomePage() {
 	// const createData = (id, name, username, email, address, error_count) => {
 	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
 	// }
+	const sendPost = ()=>{
+		console.log("hello")
+		fetch('http://localhost:8000/api/savePost', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({userid: localStorage.getItem("userid"), post: post}),
+			credentials: "same-origin"
+		})
+		.then(response => response.json())
+		.then(r => {
+		})
+		.catch(error => console.log("fetch error", error));
+	}
 
-	const minRating = 1;
-	const maxRating = 5;
 	var search = [];
 
 	var posts = [];
@@ -94,6 +108,12 @@ export default function HomePage() {
 
 	const [searchCards, setSearch] = useState(search);
 
+	const setPost = (event) => {
+		post = event.target.value
+	}
+
+	var post = ""
+
 	const [postCards, setPosts] = useState(posts);
 
 	const [followsCards, setFollows] = useState(follows);
@@ -102,45 +122,6 @@ export default function HomePage() {
 
 	const [reload, setReload] = useState(false);
 
-	// const searchNames = (searchTerm) => {
-	// 	let searchedSpeeches = speechCards.filter(speech => (speech.name.toLowerCase().includes(searchTerm.toLowerCase())));
-	// 	return setSpeechCards(searchedSpeeches);
-	// }
-	//
-	const searchName = (searchTerm) => {
-		fetch('http://localhost:8000/api/search', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({"search": searchTerm}),
-		})
-			.then(response => response.json())
-			.then((data) => {
-				if (data.status == "success") {
-
-				console.log("YES")
-				} else {
-					return(data)
-				}
-			})
-			.catch(error => { setReload(true); console.log("fetch error", error)});
-		// let searchedSpeeches = speechCards.filter(speech => (speech.name.toLowerCase().includes(searchTerm.toLowerCase())));
-		// return setSpeechCards(searchedSpeeches);
-	}
-
-
-	// const sortSpeeches = (sortTerm) => {
-	// 	let sortedSpeeches = [];
-	// 	if (sortTerm === 'name') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-	// 	} else if (sortTerm === 'created') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_created > b.date_created) ? -1 : ((b.date_created > a.date_created) ? 1 : 0));
-	// 	} else if (sortTerm === 'updated') {
-	// 		sortedSpeeches = speechCards.slice().sort((a, b) => (a.date_last_modified > b.date_last_modified) ? 1 : ((b.date_last_modified > a.date_last_modified) ? -1 : 0));
-	// 	}
-	// 	return setSpeechCards(sortedSpeeches);
-	// }
 
 	useEffect(() => {
 		fetch('http://localhost:8000/api/loadHomePage', {
@@ -174,9 +155,20 @@ export default function HomePage() {
 								<textarea className="logo d-flex justify-content-center" value={localStorage.getItem("name")}></textarea>
 									{/* <i className="fas fa-utensils"></i> */}
 							</div>
-
+							<Popup trigger = {<button>Post</button>} position = "right center">
+								{close => (
+							      <div>
+								  <textarea onKeyUp={setPost}></textarea>
+  									<button onClick={sendPost}>Submit</button>
+    								<button onClick={close}>Close</button>
+							      </div>
+							    )}
+							</Popup>
 
 						</div>
+					</div>
+					<div>
+
 					</div>
 
 					<div className="card-body" id="posts">
@@ -276,158 +268,3 @@ export default function HomePage() {
 			</div>
 	)
 }
-//
-// export default class HomePage extends Component {
-//
-// 	constructor(props) {
-// 		super(props);
-// 		this.state = {
-// 			minRating: 1,
-// 			maxRating: 5
-// 		};
-// 		this.onStarClick = this.onStarClick.bind(this);
-// 	}
-//
-// 	onStarClick(nextValue, prevValue, name) {
-// 		if (name === "minRating") {
-// 			this.setState({ minRating: nextValue });
-// 		} else if (name === "maxRating") {
-// 			this.setState({ maxRating: nextValue });
-// 		}
-// 		this.props.ratingsState(name, nextValue);
-// 		/* this.props.ratingsState(this.state); */
-// 	}
-//
-// 	render() {
-// 		const { minRating, maxRating } = this.state;
-// 		return (
-// 			<div className="restaurants-list-container col-12 col-lg-4 p-2 order-2 order-lg-1">
-// 				<div className={this.props.restaurantsListView ? "" : "hidden"}>
-// 					<div className="card text-white bg-primary mb-3">
-// 						<div className="card-header">
-// 							<div className="hero-container">
-// 								<div className="d-flex flex-column align-items-center justify-content-center">
-// 									<h1 className="logo d-flex justify-content-center">iEat</h1>
-// 									<a
-// 										href=""
-// 										target="_blank"
-// 										rel="noopener noreferrer"
-// 									>
-// 										<small>
-// 											<i>by Kyle Austin Devin</i>
-// 										</small>
-// 										{/* <i className="fas fa-utensils"></i> */}
-// 									</a>
-// 								</div>
-//
-// 								<RestaurantForm
-// 									handleSubmitForm={this.props.handleSubmitForm}
-// 									newRestaurantPosition={this.props.newRestaurantPosition}
-// 								/>
-// 							</div>
-// 						</div>
-// 						<div className="card-body">
-// 							<h5 className="card-title text-center">
-// 								Filter by <i className="far fa-star"></i>
-// 							</h5>
-// 							<div className="rate-filter d-flex justify-content-around">
-// 								<div className="search-area d-flex flex-column justify-content-center align-items-center">
-// 									<h4>
-// 										<i className="fas fa-sort-amount-down"></i>
-// 									</h4>
-// 									<div>
-// 										<StarRatingComponent
-// 											name="minRating"
-// 											starCount={5}
-// 											value={minRating}
-// 											onStarClick={this.onStarClick}
-// 										/>
-// 									</div>
-// 								</div>
-// 								<div className="search-area search-area d-flex flex-column justify-content-center align-items-center">
-// 									<h4>
-// 										<i className="fas fa-sort-amount-up"></i>
-// 									</h4>
-// 									<div>
-// 										<StarRatingComponent
-// 											name="maxRating"
-// 											starCount={5}
-// 											value={maxRating}
-// 											onStarClick={this.onStarClick}
-// 										/>
-// 									</div>
-// 								</div>
-// 							</div>
-// 						</div>
-// 						<div className="card-footer bg-transparent ">
-// 						<div>
-// 							<p className="d-flex justify-content-end">
-// 								<i
-// 									onClick={() => this.handleBtnIcon()}
-// 									className={
-// 										this.state.isClicked
-// 											? "fas fa-search-minus"
-// 											: "fas fa-search-plus"
-// 									}
-// 									title="search restaurant"
-// 									data-toggle="collapse"
-// 									href="#collapseSearch"
-// 									role="button"
-// 									aria-expanded="false"
-// 									aria-controls="collapseForm"
-// 								></i>
-// 							</p>
-//
-// 							<div className="row mb-2 collapse" id="collapseSearch">
-// 								<div className="col">
-// 									<input
-// 										type="text"
-// 										className="form-control"
-// 										id="search"
-// 										placeholder="Search a restaurant.."
-// 									/>
-// 									<div className="d-flex justify-content-center">
-// 										<button
-// 											id="search-btn"
-// 											className="btn-primary rounded"
-// 											type="submit"
-// 										>
-// 											search
-// 										</button>
-// 									</div>
-// 								</div>
-// 							</div>
-// 						</div>
-// 						</div>
-// 					</div>
-//
-// 					{this.props.restaurants
-// 						.filter(
-// 							restaurant =>
-// 								restaurant.averageRating >= this.state.minRating &&
-// 								restaurant.averageRating <= this.state.maxRating
-// 						)
-// 						.map(restaurant => (
-// 							<Restaurant
-// 								key={restaurant.id}
-// 								restaurant={restaurant}
-// 								handleClick={this.props.handleClick}
-// 							/>
-// 						))}
-// 				</div>
-//
-// 				<div className={this.props.restaurantsListView ? "hidden" : ""}>
-// 					<TargetedRestaurant
-// 						key={this.props.restaurant.name}
-// 						restaurant={this.props.restaurant}
-// 						handleClick={this.props.handleClick}
-// 						restaurantsListView={this.props.restaurantsListView}
-// 						closeRestaurantTargetView={this.props.closeRestaurantTargetView}
-// 						handleSubmitFormComment={this.props.handleSubmitFormComment}
-// 						handleSubmitForm={this.props.handleSubmitForm}
-// 					/>
-// 				</div>
-// 			</div>
-// 		);
-// 	}
-// }

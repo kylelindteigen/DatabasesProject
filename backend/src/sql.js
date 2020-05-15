@@ -70,17 +70,29 @@ class SQL{
 	}
 
 	static createMenuItem(userid, name, nutritionalInfo, style, price){
-		return db.query("INSERT INTO MenuItem(ItemID, UserID, Name, NutritionalInformation, Style, Price) VALUES( 1 ,"+userid+", \""+name+"\", \""+nutritionalInfo+"\",\""+style+"\", "+price+" )",  function (err, result, fields) {
-			if(err) throw err;
-			console.log(result);
-		})
+		return new Promise(async (resolve,reject) =>{
+			try{
+				db.query("INSERT INTO MenuItem(ItemID, UserID, Name, NutritionalInformation, Style, Price) VALUES( 1 ,"+userid+", \""+name+"\", \""+nutritionalInfo+"\",\""+style+"\", "+price+" )",  function (err, result, fields) {
+					if(err) throw err;
+					resolve(result)
+				});
+			}catch(e){
+				reject(e)
+			}
+		});
 	}
 
 	static createPost(userid, post){
-		return db.query("INSERT INTO User(PostID, UserID, TimeStamp, Post) VALUES(1,"+userid+", NOW(), \""+post+"\")", function (err, result, fields) {
-			if(err) throw err;
-			console.log(result);
-		})
+		return new Promise(async (resolve,reject) =>{
+			try{
+				db.query("INSERT INTO Post(UserID, TimeStamp, Post) VALUES("+userid+", NOW(), \""+post+"\")", function (err, result, fields) {
+					if(err) throw err;
+					resolve(result);
+				});
+			}catch(e){
+				reject(e)
+			}
+		});
 	}
 
 	static createComment(userid, postid, comment){

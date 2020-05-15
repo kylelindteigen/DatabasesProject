@@ -187,12 +187,18 @@ Router.get('/getPostComments', function(req, res){
 	})
 })
 
-Router.get('/savePost', function(req, res){
+Router.post('/savePost', function(req, res){
 	const json_data = req.body
 	var userid = json_data.userid
 	var post = json_data.post
+	sql.createPost(userid, post).then(s =>{
+		res.send(JSON.stringify({status: "success"}))
+	}).catch(() =>{
+		res.send("failed")
 
-	sql.createPost(userid, post)
+	}
+	)
+
 })
 
 Router.post('/search', function(req, res){

@@ -12,259 +12,123 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Popup from "reactjs-popup";
+import RestaurantsList from "./RestaurantsList.js"
+import Map from "./Map.js"
+import { TweetBody } from './Tweet.js'
 
 import NavBar from './NavBar';
 import "./RestaurantsList.css";
 
-const useStyles = makeStyles(theme => ({
-	// cardtitle: {
-	// 	color: var(--textColor);
-	// },
-	//
-	// card: {
-	// 	backgroundcolor: var(--restaurantBackColor);
-	// },
-	//
-	// restaurantslistcontainer: {
-	// 	height: '100vh',
-	// 	overflow: 'scroll',
-	// 	backgroundcolor: var(--restaurantContainerBackColor);
-	// },
-	//
-	// .bg-primary {
-	// 	background-color: var(--headerBackColor) !important;
-	// }
-	//
-	// .card-form {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .card-form:hover {
-	// 	background-color: var(--headerBackColor);
-	// 	box-shadow: none;
-	// }
-	//
-	// .btn-form {
-	// 	background-color: #ffb400;
-	// }
-	//
-	// .fa-sort-amount-down {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-sort-amount-up {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-star {
-	// 	color: var(--icon);
-	// }
-	//
-	// .fa-utensils {
-	// 	color: var(--icon);
-	// }
-	//
-	// .hidden {
-	// 	display: none;
-	// }
-	//
-	// @media only screen and (max-width: 991px) {
-	// 	.restaurants-list-container {
-	// 		height: 50vh;
-	// 	}
-	// }
-}));
-
-export default function HomePage() {
-	// const createData = (id, name, username, email, address, error_count) => {
-	// 	return { id, name, transcript_preview, date_created, date_last_modified, error_count };
-	// }
-	const sendPost = ()=>{
-		console.log("hello")
-		fetch('http://localhost:8000/api/savePost', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
+export default class HomePage extends Component {
+	constructor(props){
+		super(props)
+		this.state = {
+			restaurants: [],
+			restaurant: {},
+			restaurantsListView: true,
+			newRestaurantPosition: {
+				LatLngOnClick: null,
+				address: null,
+				postalCode: null
 			},
-			body: JSON.stringify({userid: localStorage.getItem("userid"), post: post}),
-			credentials: "same-origin"
-		})
-		.then(response => response.json())
-		.then(r => {
-		})
-		.catch(error => console.log("fetch error", error));
+		
+			minRating: 0,
+			maxRating: 5,
+			users:
+			[ 
+			]
+		};
+		
 	}
+	handleSubmitForm = newRestaurant => {
+		this.setState(prevState => {
+			return {
+				restaurants: prevState.restaurants.concat(newRestaurant)
+			};
+		});
+	};
 
-	var search = [];
+	handleClick = restaurant => {
+		this.setState({
+			restaurant: restaurant,
+			restaurantsListView: false
+		});
+	};
 
-	var posts = [];
+	handleSubmitFormComment = (restaurant, newComment, rating) => {
+		let updatedComment = restaurant.reviews.concat({
+			author_name: newComment.author,
+			rating: newComment.stars,
+			text: newComment.comment
+		});
+		restaurant.reviews = updatedComment;
+		restaurant.user_ratings_total++;
+		restaurant.newAverageRating = restaurant.getAverageRating();
+		this.setState({ restaurant });
+	};
 
-	var follows = [];
+	getLatLng = (lat, lng, formatted_address) => {
+		let LatLngOnClick = {
+			lat,
+			lng
+		};
+		let splitAdress = formatted_address.split(",");
+		let address = splitAdress[0];
+		let postalCode = splitAdress[1] + splitAdress[2];
+		this.setState({
+			newRestaurantPosition: { LatLngOnClick, address, postalCode }
+		});
+	};
 
-	var followed = [];
+	closeRestaurantTargetView = () => {
+		let targetedMarker = document.querySelector(".targeted-marker");
+		if (targetedMarker) {
+			targetedMarker.className = "marker";
+		}
+		this.setState({
+			restaurantsListView: true,
+			newRestaurantPosition: {
+				LatLngOnClick: null,
+				address: null,
+				postalCode: null
+			}
+		});
+	};
 
-	const classes = useStyles();
+	apiLoadedCallback = restaurants => {
+		this.setState({ restaurants });
+	};
 
-	const [searchCards, setSearch] = useState(search);
+	ratingsState = (name, nextValue) => {
+		this.setState({
+			[name]: nextValue
+		});
+	};
 
-	const setPost = (event) => {
-		post = event.target.value
-	}
-
-	var post = ""
-
-	const [postCards, setPosts] = useState(posts);
-
-	const [followsCards, setFollows] = useState(follows);
-
-	const [followedCards, setFollowed] = useState(followed);
-
-	const [reload, setReload] = useState(false);
-
-
-	useEffect(() => {
-		fetch('http://localhost:8000/api/loadHomePage', {
-  			method: 'POST',
-  			headers: {
-  				'Content-Type': 'application/json',
-  			},
-  			body: JSON.stringify({userid: localStorage.getItem("userid")}),
-			credentials: "same-origin"
-		})
-		.then(response => response.json())
-		.then(r => {
-			posts = r.followsposts
-			setPosts(posts)
-			follows = r.follows
-			setFollows(follows)
-			followed = r.followed
-			setFollowed(followed)
-		})
-		.catch(error => console.log("fetch error", error));
-	}, [reload])
-
-	return(
-		<div >
-			<NavBar/>
-			<div>
-				<div className="card">
-					<div className="card-header">
-						<div className="hero-container">
-							<div className="d-flex flex-column align-items-center justify-content-center">
-								<textarea className="logo d-flex justify-content-center" value={localStorage.getItem("name")}></textarea>
-									{/* <i className="fas fa-utensils"></i> */}
-							</div>
-							<Popup trigger = {<button>Post</button>} position = "right center">
-								{close => (
-							      <div>
-								  <textarea onKeyUp={setPost}></textarea>
-  									<button onClick={sendPost}>Submit</button>
-    								<button onClick={close}>Close</button>
-							      </div>
-							    )}
-							</Popup>
-
-						</div>
-					</div>
-					<div>
-
-					</div>
-
-					<div className="card-body" id="posts">
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{postCards.map((post, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={post.PostID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/Post/${post.PostID}`,
-										state: { PostID: post.PostID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{post.Name}</b>
-														<p>{post.Post}</p>
-														<p>{post.TimeStamp}</p>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{followsCards.map((follows, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/UserPage/${follows.UserID}`,
-										state: { UserID: follows.UserID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{follows.Name}</b>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
-						<Grid container spacing={0}
-							direction="row"
-							justify="flex-start"
-							alignItems="baseline">
-							{followedCards.map((followed, index) => (
-								 <Grow
-								 in={true}
-								 style={{ transformOrigin: '0 0 0' }}
-								 timeout={index*500 }
-							   >
-								<Grid key={follows.UserID} item sm={3} xs={"auto"} zeroMinWidth>
-									<Link style={{ textDecoration: 'none' }} to={{
-										pathname: `/UserPage/${followed.UserID}`,
-										state: { UserID: followed.UserID, show: false }
-									}}>
-										<Card>
-											<CardActions>
-												<ButtonBase>
-													<CardContent>
-														<b>{followed.Name}</b>
-													</CardContent>
-												</ButtonBase>
-											</CardActions>
-										</Card>
-									</Link>
-								</Grid>
-								</Grow>
-							))}
-						</Grid>
+	render(){
+		let name = `Kyle Apple god`
+		let handle = '@mcNasty'
+		let tweet = 'balajhakdajkfjkasfjk'
+		return(
+			<div >
+				<NavBar/>
+				<div className="main-content-container container-fluid d-flex flex-column">
+					<div className="row">
+						<RestaurantsList
+							restaurants={this.state.restaurants}
+							restaurant={this.state.restaurant}
+							restaurantsListView={this.state.restaurantsListView}
+							closeRestaurantTargetView={this.closeRestaurantTargetView}
+							handleClick={this.handleClick}
+							handleSubmitForm={this.handleSubmitForm}
+							handleSubmitFormComment={this.handleSubmitFormComment}
+							newRestaurantPosition={this.state.newRestaurantPosition}
+							ratingsState={this.ratingsState}
+						/>
 					</div>
 				</div>
-			</div>
-
-			</div>
-	)
+				
+				</div>
+		);
+	}
 }

@@ -35,17 +35,6 @@ export default class RestaurantsList extends Component {
 						<div className="card-header">
 							<div className="hero-container">
 								<div className="d-flex flex-column align-items-center justify-content-center">
-									<h1 className="logo d-flex justify-content-center">iEat</h1>
-									<a
-										href=""
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										<small>
-											<i>by Kyle Austin Devin</i>
-										</small>
-										{/* <i className="fas fa-utensils"></i> */}
-									</a>
 								</div>
 
 								<RestaurantForm

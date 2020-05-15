@@ -13,12 +13,15 @@ import DrawerList from './DrawerList'
 // import FilterSpeeches from './FilterSpeeches';
 
 const useStyles = makeStyles(theme => ({
-	root: {
-		flexGrow: 1,
+	root:{
+		width: '100%',
+		padding: 0,
 	},
 	list: {
-		width: 250,
-		height: '98%'
+		width: '100%',
+		height: '98%',
+		margin: 0,
+		padding: 0,
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
@@ -55,13 +58,14 @@ const useStyles = makeStyles(theme => ({
 	},
 	inputRoot: {
 		color: 'inherit',
+
 	},
 	inputInput: {
 		padding: theme.spacing(1, 1, 1, 7),
 		transition: theme.transitions.create('width'),
-		width: '100%',
+		width: '50%',
 		[theme.breakpoints.up('sm')]: {
-			width: 120,
+			width: 50,
 			'&:focus': {
 				width: 200,
 			},
@@ -118,15 +122,6 @@ export default function NavBar(props) {
 					<Typography className={classes.title} variant="h6" noWrap>
 						iEat
           			</Typography>
-						<InputBase
-							placeholder="Search…"
-							classes={{
-								root: classes.inputRoot,
-								input: classes.inputInput,
-							}}
-							inputProps={{ 'aria-label': 'search' }}
-							onKeyDown={handleSearch}
-						/>
 				</Toolbar>
 			</AppBar>
 		</div>

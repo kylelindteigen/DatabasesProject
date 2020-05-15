@@ -102,7 +102,7 @@ class App extends Component {
 			<div className="main-content-container container-fluid d-flex flex-column">
 				<div >
 					<CssBaseline/>
-					<Route exact path='/' component={Login}/>
+					<Route exact path='/' component={HomePage}/>
 					<Route exact path='/SignUp' component={SignUp}/>
 					<Route exact path='/SignUpRestaurant' component={SignUpRestaurant}/>
 					<Route exact path='/HomePage' component={HomePage}/>

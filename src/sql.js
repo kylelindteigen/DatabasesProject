@@ -380,7 +380,7 @@ class SQL{
 						}
 					})
 				}catch(e){
-					reject(e)
+					reject(e) 
 				}
 
 
